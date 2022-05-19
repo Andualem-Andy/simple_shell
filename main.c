@@ -1,105 +1,69 @@
+#include <stdlib.h>
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "shell.h"
 
-static char *FIRST_ARG;
-
-int handle_arguments(int ac, char **av, int *exec_file);
-void sigintHandler(int sig_num);
-char *get_first_av();
+/**
+ * ctrlC - control c managment
+ *
+ * @prmSignal: signal value
+ */
+void ctrlC(int prmSignal)
+{
+	if (prmSignal == SIGINT)
+	{
+		write(STDIN_FILENO, "\n", 1);
+		write(STDIN_FILENO, PROMPT, 2);
+	}
+}
 
 /**
- * main - Entry point
- * @ac: number of arguments
- * @av: Array of arguments
+ * main - main executable
  *
- * Return: 0 on success
-*/
-int main(int ac, char **av)
+ * @prmArgc:
+ * @prmArgv:
+ * @prmEnv:
+ *
+ * Return: 0 if succeded
+ */
+int main()
 {
-	int read, exec_file = 0;
-	char *buff = NULL;
-	size_t buff_len = 0;
-	int fd;
+	char *buffer = NULL, *argv[5];
+	size_t bufferSize = 0;
+  
+  do {
+		/* Ignore interactive signal */
+    signal(SIGINT, ctrlC);
+    /* Display prompt */
+    write(STDIN_FILENO, PROMPT, 2);
 
-	FIRST_ARG = av[0];
-
-	signal(SIGINT, sigintHandler);
-	fd = handle_arguments(ac, av, &exec_file);
-	/*update_count_lines();*/
-
-	while (1)
-	{
-		/* Print console symbol only if it is interactive*/
-		if (isatty(STDIN_FILENO) == 1 && exec_file == 0)
-			write(STDOUT_FILENO, "$ ", 2);
-		/* Read commands from console */
-		/*read = read_line(fd, &buff);*/
-		read = getline(&buff, &buff_len, stdin);
-		if (read == EOF)
+		/* Catch user command*/
+    if (getline(&buffer, &bufferSize, stdin) == EOF)
 		{
-			free(buff);
-			exit(*process_exit_code());
+			if (isatty(STDIN_FILENO))
+				write(STDIN_FILENO, "\n", 1);
+			break;
 		}
-		/*handle_history(buff);*/
-		/* Remove comments & '\n' char from buffer */
-		buff = handle_comment(buff);
-		_strtok(buff, "\n");
-		/* Handling_semicolon, ||, && and executes inside of the function */
-		handling_semicolon_and_operators(buff, read, av[0]);
-	}
-	/* Free buffer memory */
-	free(buff);
-	if (exec_file)
-		close(fd);
-	return (*process_exit_code());
+
+		if (_strcmp(buffer, "exit") == 0)
+		{
+			free(buffer);
+			exit(EXIT_SUCCESS);
+		}
+    /* Split arguments*/
+		_parsingArguments(buffer, argv);
+    
+    if (argv == NULL || argv[0] == NULL)
+			perror("Command not found !\n");
+		else if (_isBuildIn(argv[0]) == 1)
+			perror("Custom action to execute !\n");
+		else
+			_execCmd(argv);
+   } while (buffer != NULL);
+  
+    free(buffer);
+  
+  return (EXIT_SUCCESS);
 }
-
-/**
- * handle_arguments - Check the number of arguments passed to main
- * @ac: Number of arguments
- * @av: Array of arguments as strings
- * @exec_file: Integer used to check if user wants to exec commands from file
- *
- * Return: File descriptor to file
-*/
-int handle_arguments(int ac, char **av, int *exec_file)
-{
-	int fd = STDIN_FILENO;
-	char *err_msg = "Error: more than one argument\n";
-
-	if (ac > 2)
-	{
-		write(STDERR_FILENO, err_msg, _strlen(err_msg));
-		exit(1);
-	}
-	if (ac == 2)
-	{
-		fd = open(av[1], O_RDONLY);
-		*exec_file = 1;
-	}
-	if (fd == -1)
-	{
-		perror(av[0]);
-		exit(1);
-	}
-
-	return (fd);
-}
-
-/**
- * sigintHandler - Avoids current process to finish
- * @sig_num: Signal number
-*/
-void sigintHandler(int __attribute__((unused))sig_num)
-{
-	write(STDIN_FILENO, "\n$ ", 3);
-}
-
-/**
- * get_first_av - Returns the first argument passed to main
- *
- * Return: Pointer to first arg passed to main
-*/
-char *get_first_av(void)
-{
-	return (FIRST_ARG);
-}
+    
