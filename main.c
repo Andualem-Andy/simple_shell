@@ -1,69 +1,49 @@
-#include <stdlib.h>
-#include <signal.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "shell.h"
+#include "main.h"
 
 /**
- * ctrlC - control c managment
+ * main - implements super simple shell
  *
- * @prmSignal: signal value
+ * @ac: number of commandline arguments
+ * @av: array of commandline arguments
+ * @env: array of environment variables
+ *
+ * Return: 0 success. 1 otherwise
  */
-void ctrlC(int prmSignal)
+int main(int ac, char **av, char **env)
 {
-	if (prmSignal == SIGINT)
+	list_t *env_list = NULL;
+	int shell_return;
+
+	/* create env_list */
+	env_list = create_env(env, env_list);
+
+	/* handle SIGINT */
+	signal(SIGINT, sig_handler);
+
+	/* start shell */
+	shell_return = shell(env_list, av[0]);
+
+	/*check return value of shell */
+	if (shell_return)
 	{
-		write(STDIN_FILENO, "\n", 1);
-		write(STDIN_FILENO, PROMPT, 2);
+		free_list(env_list);
+		exit(shell_return);
 	}
+
+	(void)ac;
+
+	free_list(env_list);
+
+	return (0);
 }
 
 /**
- * main - main executable
- *
- * @prmArgc:
- * @prmArgv:
- * @prmEnv:
- *
- * Return: 0 if succeded
+ * sig_handler - handles SIGINT
+ * @sig: SIGINT
  */
-int main()
+void sig_handler(int sig)
 {
-	char *buffer = NULL, *argv[5];
-	size_t bufferSize = 0;
-  
-  do {
-		/* Ignore interactive signal */
-    signal(SIGINT, ctrlC);
-    /* Display prompt */
-    write(STDIN_FILENO, PROMPT, 2);
-
-		/* Catch user command*/
-    if (getline(&buffer, &bufferSize, stdin) == EOF)
-		{
-			if (isatty(STDIN_FILENO))
-				write(STDIN_FILENO, "\n", 1);
-			break;
-		}
-
-		if (_strcmp(buffer, "exit") == 0)
-		{
-			free(buffer);
-			exit(EXIT_SUCCESS);
-		}
-    /* Split arguments*/
-		_parsingArguments(buffer, argv);
-    
-    if (argv == NULL || argv[0] == NULL)
-			perror("Command not found !\n");
-		else if (_isBuildIn(argv[0]) == 1)
-			perror("Custom action to execute !\n");
-		else
-			_execCmd(argv);
-   } while (buffer != NULL);
-  
-    free(buffer);
-  
-  return (EXIT_SUCCESS);
+	signal(sig, sig_handler);
+	write(STDOUT_FILENO, "\n", 2);
+	prompt();
 }
-    

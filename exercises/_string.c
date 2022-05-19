@@ -1,4 +1,6 @@
-#include "main.h"
+#include "strings.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /**
  * _strcpy - makes a copy of a string
@@ -95,4 +97,76 @@ char *_strdup(const char *str)
 
 	/* copy contents of str into new string */
 	return (_strcpy(result, str));
+}
+
+/**
+ * _strtok - tokenizes a given string using a given delimiter
+ * @str: string
+ * @delim: delimiter
+ *
+ * Return: pointer to next token. Otherwise NULL
+ */
+char *_strtok(char *str, const char *delim)
+{
+	char c;
+	int found_char = 0;
+	char *start;
+	static char *current;
+
+	start = (str ? str : current);
+
+	if (str)
+		current = str;
+
+	if (delim == NULL || *current == '\0')
+		return (NULL);
+
+	c = delim[0];
+
+	while (*current == c) /* ignore separators at beginning */
+	{
+		start++;
+		current++;
+	}
+
+	while (*current)
+	{
+		if (*current == c && found_char) /* found a delimiter */
+		{
+			*current = '\0';
+			current++;
+			break;
+		}
+
+		found_char = 1;
+		current++;
+	}
+
+	while (*current && *current == c) /* ignore separators at end */
+		current++;
+
+	return (start);
+}
+
+/**
+ * is_in_str - checks whether given character is in a given string
+ * @str: string
+ * @c: character
+ *
+ * Return: 1 if c is in str. 0 Otherwise
+ */
+int is_in_str(const char *str, char c)
+{
+	if (str == NULL)
+		return (0);
+
+	while (*str)
+	{
+		if (*str == c)
+			return (1);
+
+		str++;
+	}
+
+	return (0);
 }
