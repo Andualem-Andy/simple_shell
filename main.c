@@ -1,73 +1,47 @@
-#include "main.h"
-
+#include "shell.h"
 /**
- * free_data - frees data structure
- *
- * @datash: data structure
- * Return: no return
+ * main - simple shell
+ * @name_file: is the name of file executable
+ * @ac: is the number of arguments
+ * Return: always 0.
  */
-void free_data(data_shell *datash)
+int main(int ac __attribute__((unused)), char **name_file)
 {
-	unsigned int i;
+	char *buffer = NULL, **arg, *copy = NULL, *token;
+	size_t bufsize = 0;
+	int status = 0, cont = 0, cont_prom = 1;
 
-	for (i = 0; datash->_environ[i]; i++)
-	{
-		free(datash->_environ[i]);
-	}
-
-	free(datash->_environ);
-	free(datash->pid);
-}
-
-/**
- * set_data - Initialize data structure
- *
- * @datash: data structure
- * @av: argument vector
- * Return: no return
- */
-void set_data(data_shell *datash, char **av)
-{
-	unsigned int i;
-
-	datash->av = av;
-	datash->input = NULL;
-	datash->args = NULL;
-	datash->status = 0;
-	datash->counter = 1;
-
-	for (i = 0; environ[i]; i++)
-		;
-
-	datash->_environ = malloc(sizeof(char *) * (i + 1));
-
-	for (i = 0; environ[i]; i++)
-	{
-		datash->_environ[i] = _strdup(environ[i]);
-	}
-
-	datash->_environ[i] = NULL;
-	datash->pid = aux_itoa(getpid());
-}
-
-/**
- * main - Entry point
- *
- * @ac: argument count
- * @av: argument vector
- *
- * Return: 0 on success.
- */
-int main(int ac, char **av)
-{
-	data_shell datash;
-	(void) ac;
-
-	signal(SIGINT, get_sigint);
-	set_data(&datash, av);
-	shell_loop(&datash);
-	free_data(&datash);
-	if (datash.status < 0)
-		return (255);
-	return (datash.status);
+	do	{
+		if (isatty(fileno(stdin)))
+		{
+			printf("simple_shell-> ");
+		}
+		if (getline(&buffer, &bufsize, stdin) == EOF)
+		{
+			free(buffer);
+			if (isatty(fileno(stdin)))
+				printf("\n");
+			exit(status);
+		}
+		copy = _strdup(buffer);
+		token = strtok(copy, " \t\n");
+		if (!token)
+		{
+			cont_prom++;
+			free(copy);
+			continue;
+		}
+		while (token != NULL)
+		{
+			token = strtok(NULL, " \t\n");
+			cont++;
+		}
+		arg = get_arguments(buffer, cont);
+		status = execute(arg, copy, buffer, name_file, cont_prom);
+		free(copy);
+		free(buffer);
+		buffer = NULL;
+		cont_prom++;
+	} while (TRUE);
+	return (status);
 }
