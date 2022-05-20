@@ -1,57 +1,74 @@
-# README - SIMPLE SHELL
+#simple shell partner project
 
-[![Whats-App-Image-2022-04-21-at-5-24-21-PM.jpg](https://i.postimg.cc/L6cP6H47/Whats-App-Image-2022-04-21-at-5-24-21-PM.jpg)](https://postimg.cc/dL935cym)
+[ALX School C Programming-group project](https://github.com/corbinenterline1/simple_shell.git)
 
-## NAME
-_shell - command interpreter (shell)_
-
-## SYNOPSIS
-_shell [get_arguments] [get_PATH] [execute]_
-
-## DESCRIPTION
-_shell is a command interpreter which mimics the system .B shell.This is the first version developed by HolbertonSchool first term students. This version has features like interactive mode and non-interactive mode. This manual page is not intended to be a tutorial or a complete selection._
-
-### Overview
-_The shell is a command that reads lines from a file or from the terminal. It interprets them and generally ex‐ ecutes other commands. To run the program we use the .B ./shell command and to exit it we can use the .B exit command._
-
-### Invocation
-_If  there are no arguments present to execute, it will output the file not executed option and if the input is a command it will perform the command. Shell can handle the following command  errors  (as  described  below). prints  error  when there are problems in the executable. When starting for the first time, the shell inspects argument 0, and if it starts with a hyphen '-', the shell is it is also considered  a  login  shell.  A  login shell first reads the commands of the files and if they exist it executes them._
-### Argument List Processing
-_The  incoming argument can be specified a hyphen "-" and activate the traibuto of that option..br_ 
-
-* ls Print the files
-* ls -l Print the files with all the characteristics of the files
-* ls -l *.c Print the files with all the characteristics of the files with extension .c
-* exit Exit the program
-* env Prints the current environment
-
-### EXAMPLE
-```
-~/simple_shell$ gcc -g -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
-~/simple_shell$ ./hsh
-simple_shell-> 
-
-simple_shell-> ls
-
-README.md   execute.c  'get_PATH copy'    get_arguments.c    
-shell  _strcat.c    generate_authors.sh   get_PATH.c       
-main.c            shell.h
-        
-simple_shell-> ls -l
-
--rw-r--r--  1  AFOP     61 Apr 12 22:02  README.md -rw-r--r-- 1 AFOP   733 Apr 15 11:32  _strcat.c -rw-
-r--r-- 1 AFOP   456 Apr 14 18:36  execute.c -rwxr-xr-x 1 AFOP   407 Apr 13 23:55  generate_authors.sh
-        
-simple_shell-> /bin/ls
-
-README.md   execute.c            'get_PATH copy'   get_arguments.c   shell
-_strcat.c   generate_authors.sh   get_PATH.c       main.c            shell.h
-
-simple_shell-> env
-USER=julien  LANGUAGE=en_US  SESSION=ubuntu  COMPIZ_CONFIG_PROFILE=ubuntu   SHLVL=1   HOME=/home/julien
-C_IS=Fun_:)             DESKTOP_SESSION=ubuntu            LOGNAME=julien            TERM=xterm-256color
-PATH=/home/julien/bin:/home/julien/.local/bin:/usr/local/sbin:/usr/lo‐
-cal/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin DISPLAY=:0
-
-## AUTHORS
-Andualem Asamenew And Debora Taye
+## The folder contains the group project "simple_shell" and associated tasks:
+00. Folder contents (28 functions, 1 header)
+	* prompt.c
+		* main program
+		* spacecheck
+		* _atoi
+	* read_input.c
+		* read_input
+		* env_print
+		* pathandfree
+		* _halt
+		* freeptrarrayandexit
+	* errortime.c
+		* errortime
+		* _abs
+		* _reverse
+		* _swap
+		* _itoa
+	* newlistnewnode.c
+		* pathchecker
+		* pathlist
+		* add_node
+		* createpathlist
+		* free_list
+	* supp_functions.c
+		* _strncpy
+		* _strlen
+		* _putchar
+		* _strncmp
+		* str_concat
+	* supp_functions02.c
+		*  
+0. README, man, AUTHORS - repo: simple_shell, README.md, man_1_simple_shell, AUTHORS
+	* Write a README
+	* Write a man for your shell.
+	* You should have an AUTHORS file at the root of your repository, listing all individuals having contributed content to the repository.
+1. Betty would be proud
+	* Write a beautiful code that passes the Betty checks
+3. Simple shell 0.1
+	* Write a UNIX command line interpreter.
+		Your shell should:
+		* Display a prompt and wait for the user to type a command. A command line always ends with a new line.
+		* The prompt is displayed again each time a command has been executed.
+		* The command lines are simple, no semicolons, no pipes, no redirections or any other advanced features.
+		* The command lines are made only of one word. No arguments will be passed to programs.
+		* If an executable cannot be found, print an error message and display the prompt again.
+		* Handle errors.
+		* You have to handle the end of file condition (Ctrl+D)
+5. Simple shell 0.2
+	* Simple shell 0.1+
+		* Handle command lines with arguments
+7. Simple shell 0.3
+	* Simple shell 0.2+
+		* Handle the PATH
+8. Simple shell 0.4
+	* Simple shell 0.3+
+		* Implement the exit built-in, that exits the shell
+		* Usage: exit
+		* You dont have to handle any argument to the built-in exit
+11. Simple shell 1.0
+	* Simple shell 0.4+
+		* Implement the env built-in, that prints the current environment
+22. What happens when you type ls-l in the shell - blogpost
+	* Write a blog post describing step by step what happens when you type ls -l and hit Enter in a shell. Try to explain every step you know of, going in as much details as you can, give examples and draw diagrams when needed. You should merge your previous knowledge of the shell with the specifics of how it works under the hoods (including syscalls).
+		* Have at least one picture, at the top of the blog post
+		* Publish your blog post on Medium or LinkedIn
+		* Share your blog post at least on LinkedIn
+		* Only one blog post by team
+		* The blog post must be done and published before the first deadline (it will be part of the manual review)
+		* Please, remember that these blogs must be written in English to further your technical ability in a variety of settings
