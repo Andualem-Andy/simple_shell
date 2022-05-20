@@ -1,81 +1,90 @@
-.TH man "6 April 2021" "simple_shell man page"
+.TH hsh 1 "21 March 2018" "1.0" "Holberton simple_shell Manual"
 
 .SH NAME
-simple_shell - takes command from user input into prompt 
-and does what the user need to do
+hsh \- Simple UNIX shell
 
-.SH SYNONPSIS
-.B simple_shell 
-[command_string | file] [options]
+.SH SYNOPSIS
+.B ./hsh
+.I options are not available
+Part of a project at holberton school.
 
 .SH DESCRIPTION
-.B simple_shell 
-is a command language interpreter 
-that executes commands read from the standard input or from a file.
 
-.SH ARGUMENTS
-If arguments remain after option processing the first argument 
-is assumed to be the name of a file containing shell commands.
-simple_shell reads and executes commands from this file, then exit.
-simple_shell exit status is the exit status of the last command executed
- in the script. If not commands are executed, the exit status is '\n'.
-The executed files are always found in the PATH.
+hsh is a simplified shell that takes user input as UNIX commands and interprets\
+them.  It based on the first UNIX shell created by Ken Thompson. It is designed\
+to be used in a UNIX-like environment.
 
-.SH DEFINITIONS
-The following definitions are used throughout the rest of this document.
-.P
-.B blank  
-A space or a tab.
-.P
-.B word
-A sequence of characters considered as a single unit by the simple_shell.
-also known as 
-.B token.
-.P
-.B name
-A word consisting only of alphanumeric characters and underscores,
-and beginning with an alphabetic character or an underscore.
-Also referred to as an 
-.B identifier.
+.SH INVOCATION
+.br
+.\&
+.RS
+\&$ ./hsh
 
-.SH SIMPLE_SHELL GRAMMAR
-.B Simple Commands
-A simple command is a sequence of optional variable assignments followed by
-blank-separated words and redirections, and terminated by a control operator.
-The first word specifies the command to be executed, and is passed as
-argument zero.  The remaining words are passed as arguments to the invoked
-command.
+A prompt will then appear and the user can begin entering and executing\
+commands by pressing 'enter'.
 
-.SH COMMAND EXECUTION
-After a command has been split into words, if it results in a simple
-command and an optional list of arguments, the following actions are taken.
+Commands can also be entered and then piped into ./hsh.
+.br
+.\&
+\&$ echo "I have a purple penguin" | ./hsh
 
-.SH EXAMPLES
+.SH FEATURES
 .br
-ls /directory/directory
+.B Accepts piped input
 .br
-cd directory/
+.B Accepts file as an argument
 .br
-cd ../..
+.B Variable substitution
 .br
-exit(0);
+-$? $$ $# $0-9
 .br
-Ctrl+D
+.B Set local vars with FOO=bar
 .br
+-Local variables not passed with environment
+.br
+.B escape characters with -&&, || and ; -tilde expansion to home \
+directory from env
 
-.B OUTPUT
-print file and directories in the wanted directory.
-.br
-goes into the wanted directory.
-.br
-goes backward of two directories.
-.br
-exit the program and print 0.
-.br
-exit program.
 
-.SH AUTHORS
+.SH BUILTINS
+The following builtins are supported by hsh
 .br
-.Natan Mesele : natileoalpha@gmail.com
+.br
+.B env
+.br
+-prints environment.Falls through to std env if more than 1 arg -quotes around\
+ arguments (accepting more stdin on mismatch in progress)
+.br
+.B exit
+-with status
+.br
+-exits the program
+.br
+.B cd
+.br
+- change directories
+.br
+.B setenv
+.br
+- sets environment variable
+.br
+.B unsetenv
+.br
+- unsets environment variable
+.br
+.B alias
+.br
+- creates alias variable
+.br
+.B unalias
+.br
+- removes alias variable
 
-.Lidya Tsegay : lyaef58@gmail.com
+.SH BUGS
+No known bugs, but hey we aren't perfect. 
+
+.SH "SEE ALSO"
+.SH sh
+
+.SH "AUTHORS"
+Adonyas Deneke and Tewodros yesmaw

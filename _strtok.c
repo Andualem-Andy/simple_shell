@@ -1,71 +1,184 @@
 #include "shell.h"
-
-/* GLOBAL VAR TKN_PTR */
-static char *TKN_PTR = "";
-static int NO_INIT_TKN_PTR = 1;
-
-/* helper function prototype */
-int isdelimiter(char c, char *delimiter);
-
 /**
- * _strtok - Divides a string into tokens
- * @str: String to be divided
- * @delimiter: Delimiter by which to str will be divided
- *
- * Return: Token in string
-*/
-char *_strtok(char *str, char *delimiter)
+ * strtok - tokenizes a string
+ * @str: string to tokenize
+ * @delim: delimiters used to create tokens
+ * Return: token
+ */
+char *strtok(char *str, char *delim)
 {
-	char *curr_pos;
-	char *tkn_start = NULL;
+	static char *saved_string;
+	int i;
+	int j;
+	char *tmp_str;
+	char *tmp_delim;
 
-	if (NO_INIT_TKN_PTR == 1)
+	/*if NULL passed in str becomes where saved string left off*/
+	if (str == 0)
+		str = saved_string;
+	if (str == 0)
+		return (0);
+
+	tmp_str = str;
+	tmp_delim = delim;
+	/*skip initial delimiters*/
+	i = 0;
+	while (tmp_str[i] != 0)
 	{
-		TKN_PTR = NULL;
-		NO_INIT_TKN_PTR = 0;
-	}
-
-	if ((str == NULL && TKN_PTR == NULL) || (str != NULL && str[0] == '\0'))
-		return (NULL);
-
-	if (str != NULL)
-		TKN_PTR = str;
-
-	for (curr_pos = TKN_PTR; *curr_pos != '\0'; curr_pos++)
-	{
-		if (!isdelimiter(*curr_pos, delimiter))
+		j = 0;
+		while (delim[j] != 0)
 		{
-			tkn_start = curr_pos;
-			while (*curr_pos != '\0' && !isdelimiter(*curr_pos, delimiter))
-				curr_pos++;
-
-			TKN_PTR = curr_pos + 1;
-			if (*curr_pos == '\0')
-				TKN_PTR = curr_pos;
-			*curr_pos = '\0';
-
-			return (tkn_start);
+			if (tmp_str[i] == tmp_delim[j])
+				break;
+			j++;
 		}
+		if (tmp_delim[j] == 0)
+			break;
+		i++;
 	}
-
-	return (NULL);
-}
-
-/**
- * isdelimiter - Evaluates if a char is a delimiter or not
- * @c: Char to evaluate
- * @delimiter: Set of chars as delimiters
- *
- * Return: 1 if c is a delimiter, 0 otherwise
-*/
-int isdelimiter(char c, char *delimiter)
-{
-	while (*delimiter != '\0')
+	str = str + i;
+	if (*str == 0)
 	{
-		if (c == *delimiter)
-			return (1);
-		delimiter++;
+		saved_string = str;
+		return (0);
+	}
+	/*start new token*/
+	tmp_str = tmp_str + i;
+
+	i = 0;
+	while (tmp_str[i] != 0)
+	{
+		j = 0;
+		while (tmp_delim[j] != 0)
+		{
+			if (tmp_str[i] == tmp_delim[j])
+				break;
+			j++;
+		}
+		if (tmp_delim[j] != 0)
+			break;
+		i++;
+	}
+	saved_string = tmp_str;
+	if (tmp_str[i] != 0)
+	{
+		/*saves string for next call*/
+		saved_string = (saved_string + i + 1);
+		tmp_str[i] = '\0';
+	}
+	else
+	{
+		saved_string = '\0'; /*if end of input string.*/
+	}
+	return (tmp_str);
+}
+/**
+ * strtokqe - string token with quotes and escapes
+ * @str: string
+ * @delim: delimiters
+ * @escflags: escape flags
+ * flags are bitwise.
+ * 1 = use \ to escape delims
+ * 2 = single quote skips
+ * 4 = double quote skips
+ * Return: string
+ */
+char *strtokqe(char *str, char *delim, int escflags)
+{
+	static char *saved_string;
+	int i;
+	int j;
+
+	/*if NULL passed in str becomes where saved string left off*/
+	if (str == 0)
+		str = saved_string;
+	if (str == 0)
+		return (0);
+
+	/*skip initial delimiters*/
+	i = 0;
+	while (str[i] != 0)
+	{
+		j = 0;
+		while (delim[j] != 0)
+		{
+			if (str[i] == delim[j])
+				break;
+			j++;
+		}
+		if (delim[j] == 0)
+			break;
+		i++;
+	}
+	str = str + i;
+	if (*str == 0)
+	{
+		saved_string = str;
+		return (0);
 	}
 
-	return (0);
+	/*start new token*/
+	i = 0;
+	while (str[i] != 0)
+	{
+		if (str[i] == '\\' && escflags & 1)
+		{
+			if (str[i + 1] != 0)
+				i++;
+			i++;
+			continue;
+		}
+		if (str[i] == '\'' && escflags & 2)
+		{
+			i++;
+			while (str[i] != '\'')
+			{
+				if (str[i] == '\\' && escflags & 1)
+				{
+					if (str[i + 1] != 0)
+						i++;
+					i++;
+					continue;
+				}
+				i++;
+			}
+		}
+		if (str[i] == '"' && escflags & 4)
+		{
+			i++;
+			while (str[i] != '"')
+			{
+				if (str[i] == '\\' && escflags & 1)
+				{
+					if (str[i + 1] != 0)
+						i++;
+					i++;
+					continue;
+				}
+				i++;
+			}
+		}
+		j = 0;
+		while (delim[j] != 0)
+		{
+			if (str[i] == delim[j])
+				break;
+			j++;
+		}
+		if (delim[j] != 0)
+			break;
+		i++;
+	}
+	saved_string = str;
+	if (str[i] != 0)
+	{
+		/*saves string for next call*/
+		saved_string = (saved_string + i + 1);
+		str[i] = '\0';
+	}
+	else
+	{
+		saved_string = '\0'; /*if end of input string.*/
+	}
+	return (str);
 }
