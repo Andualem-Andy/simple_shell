@@ -53,15 +53,5 @@ C_IS=Fun_:)             DESKTOP_SESSION=ubuntu            LOGNAME=julien        
 PATH=/home/julien/bin:/home/julien/.local/bin:/usr/local/sbin:/usr/lo‐
 cal/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin DISPLAY=:0
 ```
-
-## MAP MIND
-
-![mapa mental](https://media-exp1.licdn.com/dms/image/C4E12AQFjzFdl-LDhyQ/article-inline_image-shrink_1500_2232/0/1650431719995?e=2147483647&v=beta&t=YxpTNF4xLQo4jl7hnaLTF8a0tvHrugB_rHnRhMLp_9c)
-
 ## AUTHORS
-* **Jhojan David Perlaza** - *Trabajo Inicial* - [jhojanperlaza](https://github.com/jhojanperlaza)
-* **Andrés Ocaña** - *Documentación* - [AFOP](https://github.com/afop)
-
-* Comentanos sobre que te parecio el proyecto 📢
-* Gracias a todas las personas que hicieron posible el desarrollo del proyecto 🤓.
-* Finalización: 21/04/2022  
+Andualem Asamenew and Debora Taye
