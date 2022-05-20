@@ -1,7 +1,4 @@
-# README - SIMPLE SHELL
-
-[![Whats-App-Image-2022-04-21-at-5-24-21-PM.jpg](https://i.postimg.cc/L6cP6H47/Whats-App-Image-2022-04-21-at-5-24-21-PM.jpg)](https://postimg.cc/dL935cym)
-
+# README 
 ## NAME
 _shell - command interpreter (shell)_
 
